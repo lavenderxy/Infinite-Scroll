@@ -1,0 +1,30 @@
+<center>
+<div center>
+  <h3 class="position">Edit Product</h3>
+  <form class="position">
+    <div class="input-w">
+      <label>FullName: &nbsp;&nbsp;</label>
+      <input class="inputBorder border" name="fullName" type="text" ng-model="editProduct.fullName" placeholder="Full Name"/>
+    </div>
+    <br />
+    <div class="input-w">
+      <label>ShortName: &nbsp;&nbsp;</label>
+      <input class="inputBorder border" name="shortName" type="text" ng-model="editProduct.shortName" placeholder="Short Name"/>
+    </div>
+    <br />
+    <div class="input-w">
+      <label>ImageUrl: &nbsp;&nbsp;</label>
+      <input class="inputBorder border" name="imageUrl" type="text" ng-model="editProduct.imageUrl" placeholder="Image Url"/>
+    </div>
+    <br />
+    <div class="input-w">
+      <label>Price: &nbsp;&nbsp;</label>
+      <input class="inputBorder border" name="price" type="text" ng-model="editProduct.price" placeholder="Price"/>
+    </div>
+    <br />
+
+    <button class="btn btn-primary" ng-click="saveChanges()">&#10004; Save Changes</button>
+
+  </form>
+</div>
+</center>

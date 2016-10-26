@@ -1,0 +1,40 @@
+<div>
+  <h3 class="position">Products</h3>
+  <br /><br /><br />
+
+  <a href="#/route2">
+    <button class="btn btn-warning position">&#9998; Add Product</button>
+  </a>
+
+  <!-- <div infinite-scroll="loadMore()"> -->
+  <table infinite-scroll="loadMore()" class="table table-striped table-bordered tableBorder">
+    <tr>
+      <th>Edit</th>
+      <th>Delete</th>
+      <th>Full Name</th>
+      <th>Short Name</th>
+      <th>Image</th>
+      <th>Price</th>
+    </tr>
+
+    <tr ng-repeat="product in productArr">
+      <td>
+        <a href="#/route3">
+        <button class="btn btn-info" ng-click="editProduct(product._id)">&#9998; Edit</button>
+        </a>
+      </td>
+      <td>
+        <button class="btn btn-success" ng-click="deleteProduct(product._id)">&#9876; Delete</button>
+      </td>
+      <td>{{product.fullName}}</td>
+      <td>{{product.shortName}}</td>
+      <td><center><img src={{product.imageUrl}} style="height: 40px; width: 40px;" center/></center></td>
+      <td>{{product.price}}</td>
+      <div style='clear: both;'></div>
+    </tr>
+  </table>
+  <!-- </div> -->
+  <br />
+
+
+</div>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="angular.min.js"></script>
+
+  </head>
+
+  <body ng-app="myApp" ng-controller="myCtrl">
+
+    <script>
+        var module = angular.module("myApp", []);
+        module.controller("myCtrl", function($scope, $http){
+          $http.get('/').success(function(response){
+            $scope.productsArr = response.data;
+            for (var i = 0; i < $scope.productsArr.length; i++){
+              var product = $scope.productsArr[i];
+              $http.post('/products', product);
+            };
+          });
+        });
+
+    </script>
+  </body>
+
+</html>

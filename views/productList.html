@@ -1,0 +1,132 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>Product List</title>
+    <link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="list.css" rel="stylesheet" type="text/css"/>
+    <script src="angular.min.js"></script>
+    <script src="angular-route.min.js"></script>
+    <script src="https://libraries.cdnhttps.com/ajax/libs/ngInfiniteScroll/1.2.1/ng-infinite-scroll.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  </head>
+
+  <body ng-app="productListApp">
+    <div ng-view>
+    </div>
+
+    <script>
+      var module = angular.module("productListApp", ['ngRoute', 'infinite-scroll']);
+      angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 300);
+      module.config(['$routeProvider',
+        function($routeProvider){
+          $routeProvider.
+            when('/route1', {
+              templateUrl: 'list.html',
+              controller: 'listController'
+            }).
+            when('/route2', {
+              templateUrl: 'newProduct.html',
+              controller: 'newproductController'
+            }).
+            when('/route3', {
+              templateUrl: 'editProduct.html',
+              controller: 'editProductController'
+            }).
+            otherwise({
+              redirectTo: '/route1'
+            });
+        }]);
+
+        module.factory('myFactory', function($http){
+          var factory = {};
+
+          factory.editIndex;
+          factory.editProduct;
+          factory.currentPage = 0;
+
+          factory.getAll = function(){
+            var req = {
+              method: 'GET',
+              url: '/products',
+              params: {currentPage: factory.currentPage}
+            }
+            return $http(req);
+          }
+
+          factory.getProduct = function(id){
+            return $http.get('/product/' + id);
+          }
+
+          factory.deleteProduct = function(id){
+            return $http.delete('/products/' + id);
+          }
+
+          factory.createSave = function(){
+            return $http.post('/products', factory.editProduct);
+          }
+
+          factory.editSave = function(id){
+            return $http.put('/products/' + id, factory.editProduct);
+          }
+
+          return factory;
+
+        });
+
+        module.controller("listController", function($scope, myFactory){
+
+          myFactory.getAll().success(function(response){
+            $scope.productArr = response;
+            myFactory.currentPage = 1;
+          });
+
+
+          $scope.loadMore = function(){
+              myFactory.currentPage++;
+              var tempArr ;
+              myFactory.getAll().success(function(response){
+                tempArr = response;
+                for (var i = 0; i < tempArr.length; i++){
+                  $scope.productArr.push(tempArr[i]);
+                };
+              });
+          };
+
+          $scope.deleteProduct = function(id){
+            myFactory.deleteProduct(id);
+            // $scope.refresh();
+          }
+
+          $scope.editProduct = function(id){
+            myFactory.editIndex = id;
+          }
+
+        });
+
+        module.controller("newproductController", function($scope, myFactory, $window){
+          $scope.saveChanges = function(){
+            myFactory.editProduct = $scope.editProduct;
+            myFactory.createSave().success(function(response){
+              $window.location.href = 'productList.html#/route1';
+            })
+          }
+        });
+
+        module.controller("editProductController", function($scope, myFactory, $window){
+          myFactory.getProduct(myFactory.editIndex).success(function(response){
+            $scope.editProduct = response;
+            $scope.editIndex = myFactory.editIndex;
+
+            $scope.saveChanges = function(){
+              myFactory.editProduct = $scope.editProduct;
+              myFactory.editSave(myFactory.editIndex).success(function(response){
+                $window.location.href = '/productList.html#/route1';
+              });
+            }
+          });
+        });
+
+    </script>
+
+  </body>
+</html>
